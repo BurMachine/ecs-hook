@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package sbercloud.cp.metering.adapter.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "git.sbercloud.tech/cp/go/billing/metering-adapter/pkg/metering-adapter-api/v1;meteringadapterapi";
+
+service MeteringAdapterService {
+  rpc SendMeteringEvent(SendMeteringEventRequest) returns (SendMeteringEventResponse) {}
+}
+
+message SendMeteringEventRequest {
+  // type of metering message defines topic where message will be sent
+  string event_type = 1;
+  // event_request_id unique id of metering event for product (uuid)
+  string event_request_id = 2;
+  // metering event message
+  google.protobuf.Any event_message = 3;
+  // event_time time of event
+  google.protobuf.Timestamp event_time = 4;
+  // product instance id
+  string product_instance_id = 5;
+  // id of user who triggered metering event request
+  string user_id = 6;
+  // event source (admin-console or self-service)
+  optional Source source = 7;
+}
+
+enum Source {
+  SOURCE_UNSPECIFIED = 0;
+  SOURCE_ADMIN = 1;
+  SOURCE_CONSOLE = 2;
+}
+
+message SendMeteringEventResponse {
+}
